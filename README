@@ -1,0 +1,23 @@
+该项目的目标为预测泰坦尼克号乘客幸存情况，使用了sklearn库中的RandomForestClassifier建立预测模型。
+
+features：
+<br>Sex:性别
+<br>Pclass：乘客等级（一等座、二等座、三等座）
+<br>Age：年龄，存在NA值
+<br>SibSp:同行的兄弟姐妹及配偶数
+<br>Parch:同行的父母数
+
+non-features：
+<br>Name:与PassengerId一一对应，无分析意义
+<br>Ticket:与PassengerId一一对应，无分析意义
+<br>Fare:与Pclass说明情况类似（乘客所处的环境等级），存在NA值，数据较Pclass分散，故舍弃分析
+<br>Cabin:座位号，几乎与PassengerId一一对应，存在NA值，无分析意义
+<br>Embarked:登船口，属上船前变量，与海难发生无相关性，无分析意义
+
+Errors record:
+<br>建立模型时报错ValueError: Input X contains NaN.
+RandomForestClassifier does not accept missing values encoded as NaN natively. For supervised learning, you might want to consider sklearn.ensemble.HistGradientBoostingClassifier and Regressor which accept missing values encoded as NaNs natively. Alternatively, it is possible to preprocess the data, for instance by using an imputer transformer in a pipeline or drop samples with missing values. See https://scikit-learn.org/stable/modules/impute.html You can find a list of all estimators that handle NaN values at the following page: https://scikit-learn.org/stable/modules/impute.html#estimators-that-handle-nan-values
+<br>原因：Age列中存在NA值
+<br>解决方法：给每个空值都补上Age的平均值（仅作填补空白用，会导致模型建立起来有偏差）
+<br>结果：成功建模，但预测准确率（0.954545455）比直接删除Age这个feature后建的模预测准确率（0.971291866）要低
+<br>分析：推测是由于Age列中NA值太多（177/890），以平均值进行空值填补的方法导致最终误差较大；或是Age与Survived的相关性偏低，导致拉低了预测准确率。
